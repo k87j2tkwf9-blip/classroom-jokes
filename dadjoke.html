@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Joke of the Day</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 1.5em;
+            text-align: center;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; 
+            color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #joke-display {
+            font-size: 1.5em; 
+            margin-bottom: 30px; 
+            max-width: 80%;
+        }
+
+        #newJokeBtn {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #newJokeBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="joke-display">Loading a great joke...</div>
+    <button id="newJokeBtn">Load New Joke</button>
+
+    <script>
+        const jokeUrl = 'https://icanhazdadjoke.com/';
+        const jokeDisplay = document.getElementById('joke-display');
+        const jokeButton = document.getElementById('newJokeBtn');
+
+        async function fetchJoke() {
+            jokeButton.disabled = true;
+            jokeButton.textContent = 'Loading...';
+            jokeDisplay.textContent = '...Thinking of a new one...';
+
+            try {
+                const response = await fetch(jokeUrl, {
+                    headers: {
+                        'Accept': 'application/json' 
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data && data.joke) {
+                    jokeDisplay.textContent = data.joke;
+                } else {
+                    jokeDisplay.textContent = "Oops! The jokes are sleeping. Try again in a moment.";
+                }
+            } catch (error) {
+                jokeDisplay.textContent = "Error loading joke. Check your connection.";
+                console.error('Fetch error:', error);
+            } finally {
+                jokeButton.disabled = false;
+                jokeButton.textContent = 'Load New Joke';
+            }
+        }
+
+        fetchJoke();
+        jokeButton.addEventListener('click', fetchJoke);
+    </script>
+</body>
+</html>
